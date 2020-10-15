@@ -22,13 +22,7 @@ class WsseAuthMiddlewareTest extends TestCase
 
         $this->assertEquals('WSSE profile="UsernameToken"', $newRequest->getHeaderLine('Authorization'));
         $wsse = $newRequest->getHeaderLine('X-WSSE');
-        $pattern = '|UsernameToken Username="foo", PasswordDigest=".+?", Nonce=".+?", Created=".+?"|';
-        if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression($pattern, $wsse);
-
-            return;
-        }
-        // phpunit 7 compatibility
-        $this->assertRegExp($pattern, $wsse);
+        $method = method_exists($this, 'assertRegExp') ? 'assertRegExp' : 'assertMatchesRegularExpression';
+        $this->$method('|UsernameToken Username="foo", PasswordDigest=".+?", Nonce=".+?", Created=".+?"|', $wsse);
     }
 }
